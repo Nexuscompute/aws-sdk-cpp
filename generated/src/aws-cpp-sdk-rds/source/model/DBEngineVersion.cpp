@@ -55,50 +55,21 @@ DBEngineVersion::DBEngineVersion() :
     m_supportsBabelfish(false),
     m_supportsBabelfishHasBeenSet(false),
     m_customDBEngineVersionManifestHasBeenSet(false),
+    m_supportsLimitlessDatabase(false),
+    m_supportsLimitlessDatabaseHasBeenSet(false),
     m_supportsCertificateRotationWithoutRestart(false),
     m_supportsCertificateRotationWithoutRestartHasBeenSet(false),
-    m_supportedCACertificateIdentifiersHasBeenSet(false)
+    m_supportedCACertificateIdentifiersHasBeenSet(false),
+    m_supportsLocalWriteForwarding(false),
+    m_supportsLocalWriteForwardingHasBeenSet(false),
+    m_supportsIntegrations(false),
+    m_supportsIntegrationsHasBeenSet(false),
+    m_serverlessV2FeaturesSupportHasBeenSet(false)
 {
 }
 
-DBEngineVersion::DBEngineVersion(const XmlNode& xmlNode) : 
-    m_engineHasBeenSet(false),
-    m_engineVersionHasBeenSet(false),
-    m_dBParameterGroupFamilyHasBeenSet(false),
-    m_dBEngineDescriptionHasBeenSet(false),
-    m_dBEngineVersionDescriptionHasBeenSet(false),
-    m_defaultCharacterSetHasBeenSet(false),
-    m_imageHasBeenSet(false),
-    m_dBEngineMediaTypeHasBeenSet(false),
-    m_supportedCharacterSetsHasBeenSet(false),
-    m_supportedNcharCharacterSetsHasBeenSet(false),
-    m_validUpgradeTargetHasBeenSet(false),
-    m_supportedTimezonesHasBeenSet(false),
-    m_exportableLogTypesHasBeenSet(false),
-    m_supportsLogExportsToCloudwatchLogs(false),
-    m_supportsLogExportsToCloudwatchLogsHasBeenSet(false),
-    m_supportsReadReplica(false),
-    m_supportsReadReplicaHasBeenSet(false),
-    m_supportedEngineModesHasBeenSet(false),
-    m_supportedFeatureNamesHasBeenSet(false),
-    m_statusHasBeenSet(false),
-    m_supportsParallelQuery(false),
-    m_supportsParallelQueryHasBeenSet(false),
-    m_supportsGlobalDatabases(false),
-    m_supportsGlobalDatabasesHasBeenSet(false),
-    m_majorEngineVersionHasBeenSet(false),
-    m_databaseInstallationFilesS3BucketNameHasBeenSet(false),
-    m_databaseInstallationFilesS3PrefixHasBeenSet(false),
-    m_dBEngineVersionArnHasBeenSet(false),
-    m_kMSKeyIdHasBeenSet(false),
-    m_createTimeHasBeenSet(false),
-    m_tagListHasBeenSet(false),
-    m_supportsBabelfish(false),
-    m_supportsBabelfishHasBeenSet(false),
-    m_customDBEngineVersionManifestHasBeenSet(false),
-    m_supportsCertificateRotationWithoutRestart(false),
-    m_supportsCertificateRotationWithoutRestartHasBeenSet(false),
-    m_supportedCACertificateIdentifiersHasBeenSet(false)
+DBEngineVersion::DBEngineVersion(const XmlNode& xmlNode)
+  : DBEngineVersion()
 {
   *this = xmlNode;
 }
@@ -331,6 +302,12 @@ DBEngineVersion& DBEngineVersion::operator =(const XmlNode& xmlNode)
       m_customDBEngineVersionManifest = Aws::Utils::Xml::DecodeEscapedXmlText(customDBEngineVersionManifestNode.GetText());
       m_customDBEngineVersionManifestHasBeenSet = true;
     }
+    XmlNode supportsLimitlessDatabaseNode = resultNode.FirstChild("SupportsLimitlessDatabase");
+    if(!supportsLimitlessDatabaseNode.IsNull())
+    {
+      m_supportsLimitlessDatabase = StringUtils::ConvertToBool(StringUtils::Trim(Aws::Utils::Xml::DecodeEscapedXmlText(supportsLimitlessDatabaseNode.GetText()).c_str()).c_str());
+      m_supportsLimitlessDatabaseHasBeenSet = true;
+    }
     XmlNode supportsCertificateRotationWithoutRestartNode = resultNode.FirstChild("SupportsCertificateRotationWithoutRestart");
     if(!supportsCertificateRotationWithoutRestartNode.IsNull())
     {
@@ -348,6 +325,24 @@ DBEngineVersion& DBEngineVersion::operator =(const XmlNode& xmlNode)
       }
 
       m_supportedCACertificateIdentifiersHasBeenSet = true;
+    }
+    XmlNode supportsLocalWriteForwardingNode = resultNode.FirstChild("SupportsLocalWriteForwarding");
+    if(!supportsLocalWriteForwardingNode.IsNull())
+    {
+      m_supportsLocalWriteForwarding = StringUtils::ConvertToBool(StringUtils::Trim(Aws::Utils::Xml::DecodeEscapedXmlText(supportsLocalWriteForwardingNode.GetText()).c_str()).c_str());
+      m_supportsLocalWriteForwardingHasBeenSet = true;
+    }
+    XmlNode supportsIntegrationsNode = resultNode.FirstChild("SupportsIntegrations");
+    if(!supportsIntegrationsNode.IsNull())
+    {
+      m_supportsIntegrations = StringUtils::ConvertToBool(StringUtils::Trim(Aws::Utils::Xml::DecodeEscapedXmlText(supportsIntegrationsNode.GetText()).c_str()).c_str());
+      m_supportsIntegrationsHasBeenSet = true;
+    }
+    XmlNode serverlessV2FeaturesSupportNode = resultNode.FirstChild("ServerlessV2FeaturesSupport");
+    if(!serverlessV2FeaturesSupportNode.IsNull())
+    {
+      m_serverlessV2FeaturesSupport = serverlessV2FeaturesSupportNode;
+      m_serverlessV2FeaturesSupportHasBeenSet = true;
     }
   }
 
@@ -547,6 +542,11 @@ void DBEngineVersion::OutputToStream(Aws::OStream& oStream, const char* location
       oStream << location << index << locationValue << ".CustomDBEngineVersionManifest=" << StringUtils::URLEncode(m_customDBEngineVersionManifest.c_str()) << "&";
   }
 
+  if(m_supportsLimitlessDatabaseHasBeenSet)
+  {
+      oStream << location << index << locationValue << ".SupportsLimitlessDatabase=" << std::boolalpha << m_supportsLimitlessDatabase << "&";
+  }
+
   if(m_supportsCertificateRotationWithoutRestartHasBeenSet)
   {
       oStream << location << index << locationValue << ".SupportsCertificateRotationWithoutRestart=" << std::boolalpha << m_supportsCertificateRotationWithoutRestart << "&";
@@ -559,6 +559,23 @@ void DBEngineVersion::OutputToStream(Aws::OStream& oStream, const char* location
       {
         oStream << location << index << locationValue << ".SupportedCACertificateIdentifiers.member." << supportedCACertificateIdentifiersIdx++ << "=" << StringUtils::URLEncode(item.c_str()) << "&";
       }
+  }
+
+  if(m_supportsLocalWriteForwardingHasBeenSet)
+  {
+      oStream << location << index << locationValue << ".SupportsLocalWriteForwarding=" << std::boolalpha << m_supportsLocalWriteForwarding << "&";
+  }
+
+  if(m_supportsIntegrationsHasBeenSet)
+  {
+      oStream << location << index << locationValue << ".SupportsIntegrations=" << std::boolalpha << m_supportsIntegrations << "&";
+  }
+
+  if(m_serverlessV2FeaturesSupportHasBeenSet)
+  {
+      Aws::StringStream serverlessV2FeaturesSupportLocationAndMemberSs;
+      serverlessV2FeaturesSupportLocationAndMemberSs << location << index << locationValue << ".ServerlessV2FeaturesSupport";
+      m_serverlessV2FeaturesSupport.OutputToStream(oStream, serverlessV2FeaturesSupportLocationAndMemberSs.str().c_str());
   }
 
   Aws::StringStream responseMetadataLocationAndMemberSs;
@@ -730,6 +747,10 @@ void DBEngineVersion::OutputToStream(Aws::OStream& oStream, const char* location
   {
       oStream << location << ".CustomDBEngineVersionManifest=" << StringUtils::URLEncode(m_customDBEngineVersionManifest.c_str()) << "&";
   }
+  if(m_supportsLimitlessDatabaseHasBeenSet)
+  {
+      oStream << location << ".SupportsLimitlessDatabase=" << std::boolalpha << m_supportsLimitlessDatabase << "&";
+  }
   if(m_supportsCertificateRotationWithoutRestartHasBeenSet)
   {
       oStream << location << ".SupportsCertificateRotationWithoutRestart=" << std::boolalpha << m_supportsCertificateRotationWithoutRestart << "&";
@@ -741,6 +762,20 @@ void DBEngineVersion::OutputToStream(Aws::OStream& oStream, const char* location
       {
         oStream << location << ".SupportedCACertificateIdentifiers.member." << supportedCACertificateIdentifiersIdx++ << "=" << StringUtils::URLEncode(item.c_str()) << "&";
       }
+  }
+  if(m_supportsLocalWriteForwardingHasBeenSet)
+  {
+      oStream << location << ".SupportsLocalWriteForwarding=" << std::boolalpha << m_supportsLocalWriteForwarding << "&";
+  }
+  if(m_supportsIntegrationsHasBeenSet)
+  {
+      oStream << location << ".SupportsIntegrations=" << std::boolalpha << m_supportsIntegrations << "&";
+  }
+  if(m_serverlessV2FeaturesSupportHasBeenSet)
+  {
+      Aws::String serverlessV2FeaturesSupportLocationAndMember(location);
+      serverlessV2FeaturesSupportLocationAndMember += ".ServerlessV2FeaturesSupport";
+      m_serverlessV2FeaturesSupport.OutputToStream(oStream, serverlessV2FeaturesSupportLocationAndMember.c_str());
   }
   Aws::String responseMetadataLocationAndMember(location);
   responseMetadataLocationAndMember += ".ResponseMetadata";

@@ -29,20 +29,13 @@ Object::Object() :
     m_sizeHasBeenSet(false),
     m_storageClass(ObjectStorageClass::NOT_SET),
     m_storageClassHasBeenSet(false),
-    m_ownerHasBeenSet(false)
+    m_ownerHasBeenSet(false),
+    m_restoreStatusHasBeenSet(false)
 {
 }
 
-Object::Object(const XmlNode& xmlNode) : 
-    m_keyHasBeenSet(false),
-    m_lastModifiedHasBeenSet(false),
-    m_eTagHasBeenSet(false),
-    m_checksumAlgorithmHasBeenSet(false),
-    m_size(0),
-    m_sizeHasBeenSet(false),
-    m_storageClass(ObjectStorageClass::NOT_SET),
-    m_storageClassHasBeenSet(false),
-    m_ownerHasBeenSet(false)
+Object::Object(const XmlNode& xmlNode)
+  : Object()
 {
   *this = xmlNode;
 }
@@ -101,6 +94,12 @@ Object& Object::operator =(const XmlNode& xmlNode)
       m_owner = ownerNode;
       m_ownerHasBeenSet = true;
     }
+    XmlNode restoreStatusNode = resultNode.FirstChild("RestoreStatus");
+    if(!restoreStatusNode.IsNull())
+    {
+      m_restoreStatus = restoreStatusNode;
+      m_restoreStatusHasBeenSet = true;
+    }
   }
 
   return *this;
@@ -155,6 +154,12 @@ void Object::AddToNode(XmlNode& parentNode) const
   {
    XmlNode ownerNode = parentNode.CreateChildElement("Owner");
    m_owner.AddToNode(ownerNode);
+  }
+
+  if(m_restoreStatusHasBeenSet)
+  {
+   XmlNode restoreStatusNode = parentNode.CreateChildElement("RestoreStatus");
+   m_restoreStatus.AddToNode(restoreStatusNode);
   }
 
 }

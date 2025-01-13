@@ -16,8 +16,10 @@ import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;;
+import java.util.List;
+import java.util.Map;
 
 public class JsonCppClientGenerator extends CppClientGenerator {
 
@@ -84,14 +86,14 @@ public class JsonCppClientGenerator extends CppClientGenerator {
     }
 
     @Override
-    protected SdkFileEntry generateModelSourceFile(ServiceModel serviceModel, Map.Entry<String, Shape> shapeEntry) throws Exception {
+    protected SdkFileEntry generateModelSourceFile(ServiceModel serviceModel, Map.Entry<String, Shape> shapeEntry) {
         Shape shape = shapeEntry.getValue();
         if (shape.isResult() && shape.hasEventStreamMembers())
             return null;
 
         // if the shape is an event and its content type is "blob" then we don't need a source file, because the whole
         // class is implemented in the header file. See EventHeader.vm
-        if (shape.isEvent() && shape.getEventPayloadType().equals("blob"))
+        if (shape.isEvent() && "blob".equals(shape.getEventPayloadType()))
             return null;
 
         if (shape.isException() && !shape.isJsonModeledException())
@@ -132,14 +134,7 @@ public class JsonCppClientGenerator extends CppClientGenerator {
                 template = velocityEngine.getTemplate("/com/amazonaws/util/awsclientgenerator/velocity/cpp/json/JsonSubObjectSource.vm", StandardCharsets.UTF_8.name());
             }
 
-            for (Map.Entry<String, Operation> opEntry : serviceModel.getOperations().entrySet()) {
-                Operation op = opEntry.getValue();
-                if (op.getRequest() != null && op.getRequest().getShape().getName() == shape.getName()) {
-                    context.put("operation", op);
-                    break;
-                }
-            }
-
+            context.put("operation", serviceModel.getOperationForRequestShapeName(shape.getName()));
             context.put("shape", shape);
             context.put("typeInfo", new CppShapeInformation(shape, serviceModel));
             context.put("CppViewHelper", CppViewHelper.class);
@@ -159,6 +154,7 @@ public class JsonCppClientGenerator extends CppClientGenerator {
 
         VelocityContext context = createContext(serviceModel);
         context.put("CppViewHelper", CppViewHelper.class);
+        context.put("RequestlessOperations", requestlessOperations);
 
         String fileName = String.format("include/aws/%s/%sClient.h", serviceModel.getMetadata().getProjectName(),
                 serviceModel.getMetadata().getClassNamePrefix());
@@ -167,20 +163,29 @@ public class JsonCppClientGenerator extends CppClientGenerator {
     }
 
     @Override
-    protected SdkFileEntry generateClientSourceFile(final ServiceModel serviceModel) throws Exception {
+    protected List<SdkFileEntry> generateClientSourceFile(final List<ServiceModel> serviceModels) throws Exception {
+        List<SdkFileEntry> sourceFiles = new ArrayList<>();
+        for (int i = 0; i < serviceModels.size(); i++) {
+            Template template = velocityEngine.getTemplate("/com/amazonaws/util/awsclientgenerator/velocity/cpp/json/JsonServiceClientSource.vm", StandardCharsets.UTF_8.name());
 
-        Template template = velocityEngine.getTemplate("/com/amazonaws/util/awsclientgenerator/velocity/cpp/json/JsonServiceClientSource.vm", StandardCharsets.UTF_8.name());
+            VelocityContext context = createContext(serviceModels.get(i));
+            context.put("CppViewHelper", CppViewHelper.class);
 
-        VelocityContext context = createContext(serviceModel);
-        context.put("CppViewHelper", CppViewHelper.class);
-
-        String fileName = String.format("source/%sClient.cpp", serviceModel.getMetadata().getClassNamePrefix());
-
-        return makeFile(template, context, fileName, true);
+            final String fileName;
+            if (i == 0) {
+                context.put("onlyGeneratedOperations", false);
+                fileName = String.format("source/%sClient.cpp", serviceModels.get(i).getMetadata().getClassNamePrefix());
+            } else {
+                context.put("onlyGeneratedOperations", true);
+                fileName = String.format("source/%sClient%d.cpp", serviceModels.get(i).getMetadata().getClassNamePrefix(), i);
+            }
+            sourceFiles.add(makeFile(template, context, fileName, true));
+        }
+        return sourceFiles;
     }
 
     @Override
-    protected SdkFileEntry generateEventStreamHandlerSourceFile(ServiceModel serviceModel, Map.Entry<String, Shape> shapeEntry) throws Exception {
+    protected SdkFileEntry generateEventStreamHandlerSourceFile(ServiceModel serviceModel, Map.Entry<String, Shape> shapeEntry) {
         Shape shape = shapeEntry.getValue();
         if (shape.isRequest()) {
             Template template = velocityEngine.getTemplate("/com/amazonaws/util/awsclientgenerator/velocity/cpp/json/JsonEventStreamHandlerSource.vm", StandardCharsets.UTF_8.name());

@@ -38,7 +38,18 @@ namespace Model
     ServiceAccountRoleArn,
     ResolveConflicts,
     MaxUnavailable,
-    MaxUnavailablePercentage
+    MaxUnavailablePercentage,
+    NodeRepairEnabled,
+    ConfigurationValues,
+    SecurityGroups,
+    Subnets,
+    AuthenticationMode,
+    PodIdentityAssociations,
+    UpgradePolicy,
+    ZonalShiftConfig,
+    ComputeConfig,
+    StorageConfig,
+    KubernetesNetworkConfig
   };
 
 namespace UpdateParamTypeMapper

@@ -37,8 +37,8 @@ namespace DirectoryService
   {
     public:
       typedef Aws::Client::AWSJsonClient BASECLASS;
-      static const char* SERVICE_NAME;
-      static const char* ALLOCATION_TAG;
+      static const char* GetServiceName();
+      static const char* GetAllocationTag();
 
       typedef DirectoryServiceClientConfiguration ClientConfigurationType;
       typedef DirectoryServiceEndpointProvider EndpointProviderType;
@@ -48,14 +48,14 @@ namespace DirectoryService
         * is not specified, it will be initialized to default values.
         */
         DirectoryServiceClient(const Aws::DirectoryService::DirectoryServiceClientConfiguration& clientConfiguration = Aws::DirectoryService::DirectoryServiceClientConfiguration(),
-                               std::shared_ptr<DirectoryServiceEndpointProviderBase> endpointProvider = Aws::MakeShared<DirectoryServiceEndpointProvider>(ALLOCATION_TAG));
+                               std::shared_ptr<DirectoryServiceEndpointProviderBase> endpointProvider = nullptr);
 
        /**
         * Initializes client to use SimpleAWSCredentialsProvider, with default http client factory, and optional client config. If client config
         * is not specified, it will be initialized to default values.
         */
         DirectoryServiceClient(const Aws::Auth::AWSCredentials& credentials,
-                               std::shared_ptr<DirectoryServiceEndpointProviderBase> endpointProvider = Aws::MakeShared<DirectoryServiceEndpointProvider>(ALLOCATION_TAG),
+                               std::shared_ptr<DirectoryServiceEndpointProviderBase> endpointProvider = nullptr,
                                const Aws::DirectoryService::DirectoryServiceClientConfiguration& clientConfiguration = Aws::DirectoryService::DirectoryServiceClientConfiguration());
 
        /**
@@ -63,7 +63,7 @@ namespace DirectoryService
         * the default http client factory will be used
         */
         DirectoryServiceClient(const std::shared_ptr<Aws::Auth::AWSCredentialsProvider>& credentialsProvider,
-                               std::shared_ptr<DirectoryServiceEndpointProviderBase> endpointProvider = Aws::MakeShared<DirectoryServiceEndpointProvider>(ALLOCATION_TAG),
+                               std::shared_ptr<DirectoryServiceEndpointProviderBase> endpointProvider = nullptr,
                                const Aws::DirectoryService::DirectoryServiceClientConfiguration& clientConfiguration = Aws::DirectoryService::DirectoryServiceClientConfiguration());
 
 
@@ -786,13 +786,13 @@ namespace DirectoryService
          * href="http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/DescribeDirectories">AWS
          * API Reference</a></p>
          */
-        virtual Model::DescribeDirectoriesOutcome DescribeDirectories(const Model::DescribeDirectoriesRequest& request) const;
+        virtual Model::DescribeDirectoriesOutcome DescribeDirectories(const Model::DescribeDirectoriesRequest& request = {}) const;
 
         /**
          * A Callable wrapper for DescribeDirectories that returns a future to the operation so that it can be executed in parallel to other requests.
          */
         template<typename DescribeDirectoriesRequestT = Model::DescribeDirectoriesRequest>
-        Model::DescribeDirectoriesOutcomeCallable DescribeDirectoriesCallable(const DescribeDirectoriesRequestT& request) const
+        Model::DescribeDirectoriesOutcomeCallable DescribeDirectoriesCallable(const DescribeDirectoriesRequestT& request = {}) const
         {
             return SubmitCallable(&DirectoryServiceClient::DescribeDirectories, request);
         }
@@ -801,9 +801,35 @@ namespace DirectoryService
          * An Async wrapper for DescribeDirectories that queues the request into a thread executor and triggers associated callback when operation has finished.
          */
         template<typename DescribeDirectoriesRequestT = Model::DescribeDirectoriesRequest>
-        void DescribeDirectoriesAsync(const DescribeDirectoriesRequestT& request, const DescribeDirectoriesResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        void DescribeDirectoriesAsync(const DescribeDirectoriesResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr, const DescribeDirectoriesRequestT& request = {}) const
         {
             return SubmitAsync(&DirectoryServiceClient::DescribeDirectories, request, handler, context);
+        }
+
+        /**
+         * <p>Obtains status of directory data access enablement through the Directory
+         * Service Data API for the specified directory.</p><p><h3>See Also:</h3>   <a
+         * href="http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/DescribeDirectoryDataAccess">AWS
+         * API Reference</a></p>
+         */
+        virtual Model::DescribeDirectoryDataAccessOutcome DescribeDirectoryDataAccess(const Model::DescribeDirectoryDataAccessRequest& request) const;
+
+        /**
+         * A Callable wrapper for DescribeDirectoryDataAccess that returns a future to the operation so that it can be executed in parallel to other requests.
+         */
+        template<typename DescribeDirectoryDataAccessRequestT = Model::DescribeDirectoryDataAccessRequest>
+        Model::DescribeDirectoryDataAccessOutcomeCallable DescribeDirectoryDataAccessCallable(const DescribeDirectoryDataAccessRequestT& request) const
+        {
+            return SubmitCallable(&DirectoryServiceClient::DescribeDirectoryDataAccess, request);
+        }
+
+        /**
+         * An Async wrapper for DescribeDirectoryDataAccess that queues the request into a thread executor and triggers associated callback when operation has finished.
+         */
+        template<typename DescribeDirectoryDataAccessRequestT = Model::DescribeDirectoryDataAccessRequest>
+        void DescribeDirectoryDataAccessAsync(const DescribeDirectoryDataAccessRequestT& request, const DescribeDirectoryDataAccessResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        {
+            return SubmitAsync(&DirectoryServiceClient::DescribeDirectoryDataAccess, request, handler, context);
         }
 
         /**
@@ -840,13 +866,13 @@ namespace DirectoryService
          * href="http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/DescribeEventTopics">AWS
          * API Reference</a></p>
          */
-        virtual Model::DescribeEventTopicsOutcome DescribeEventTopics(const Model::DescribeEventTopicsRequest& request) const;
+        virtual Model::DescribeEventTopicsOutcome DescribeEventTopics(const Model::DescribeEventTopicsRequest& request = {}) const;
 
         /**
          * A Callable wrapper for DescribeEventTopics that returns a future to the operation so that it can be executed in parallel to other requests.
          */
         template<typename DescribeEventTopicsRequestT = Model::DescribeEventTopicsRequest>
-        Model::DescribeEventTopicsOutcomeCallable DescribeEventTopicsCallable(const DescribeEventTopicsRequestT& request) const
+        Model::DescribeEventTopicsOutcomeCallable DescribeEventTopicsCallable(const DescribeEventTopicsRequestT& request = {}) const
         {
             return SubmitCallable(&DirectoryServiceClient::DescribeEventTopics, request);
         }
@@ -855,7 +881,7 @@ namespace DirectoryService
          * An Async wrapper for DescribeEventTopics that queues the request into a thread executor and triggers associated callback when operation has finished.
          */
         template<typename DescribeEventTopicsRequestT = Model::DescribeEventTopicsRequest>
-        void DescribeEventTopicsAsync(const DescribeEventTopicsRequestT& request, const DescribeEventTopicsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        void DescribeEventTopicsAsync(const DescribeEventTopicsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr, const DescribeEventTopicsRequestT& request = {}) const
         {
             return SubmitAsync(&DirectoryServiceClient::DescribeEventTopics, request, handler, context);
         }
@@ -975,13 +1001,13 @@ namespace DirectoryService
          * href="http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/DescribeSnapshots">AWS
          * API Reference</a></p>
          */
-        virtual Model::DescribeSnapshotsOutcome DescribeSnapshots(const Model::DescribeSnapshotsRequest& request) const;
+        virtual Model::DescribeSnapshotsOutcome DescribeSnapshots(const Model::DescribeSnapshotsRequest& request = {}) const;
 
         /**
          * A Callable wrapper for DescribeSnapshots that returns a future to the operation so that it can be executed in parallel to other requests.
          */
         template<typename DescribeSnapshotsRequestT = Model::DescribeSnapshotsRequest>
-        Model::DescribeSnapshotsOutcomeCallable DescribeSnapshotsCallable(const DescribeSnapshotsRequestT& request) const
+        Model::DescribeSnapshotsOutcomeCallable DescribeSnapshotsCallable(const DescribeSnapshotsRequestT& request = {}) const
         {
             return SubmitCallable(&DirectoryServiceClient::DescribeSnapshots, request);
         }
@@ -990,7 +1016,7 @@ namespace DirectoryService
          * An Async wrapper for DescribeSnapshots that queues the request into a thread executor and triggers associated callback when operation has finished.
          */
         template<typename DescribeSnapshotsRequestT = Model::DescribeSnapshotsRequest>
-        void DescribeSnapshotsAsync(const DescribeSnapshotsRequestT& request, const DescribeSnapshotsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        void DescribeSnapshotsAsync(const DescribeSnapshotsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr, const DescribeSnapshotsRequestT& request = {}) const
         {
             return SubmitAsync(&DirectoryServiceClient::DescribeSnapshots, request, handler, context);
         }
@@ -1003,13 +1029,13 @@ namespace DirectoryService
          * href="http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/DescribeTrusts">AWS
          * API Reference</a></p>
          */
-        virtual Model::DescribeTrustsOutcome DescribeTrusts(const Model::DescribeTrustsRequest& request) const;
+        virtual Model::DescribeTrustsOutcome DescribeTrusts(const Model::DescribeTrustsRequest& request = {}) const;
 
         /**
          * A Callable wrapper for DescribeTrusts that returns a future to the operation so that it can be executed in parallel to other requests.
          */
         template<typename DescribeTrustsRequestT = Model::DescribeTrustsRequest>
-        Model::DescribeTrustsOutcomeCallable DescribeTrustsCallable(const DescribeTrustsRequestT& request) const
+        Model::DescribeTrustsOutcomeCallable DescribeTrustsCallable(const DescribeTrustsRequestT& request = {}) const
         {
             return SubmitCallable(&DirectoryServiceClient::DescribeTrusts, request);
         }
@@ -1018,7 +1044,7 @@ namespace DirectoryService
          * An Async wrapper for DescribeTrusts that queues the request into a thread executor and triggers associated callback when operation has finished.
          */
         template<typename DescribeTrustsRequestT = Model::DescribeTrustsRequest>
-        void DescribeTrustsAsync(const DescribeTrustsRequestT& request, const DescribeTrustsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        void DescribeTrustsAsync(const DescribeTrustsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr, const DescribeTrustsRequestT& request = {}) const
         {
             return SubmitAsync(&DirectoryServiceClient::DescribeTrusts, request, handler, context);
         }
@@ -1073,6 +1099,32 @@ namespace DirectoryService
         void DisableClientAuthenticationAsync(const DisableClientAuthenticationRequestT& request, const DisableClientAuthenticationResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
         {
             return SubmitAsync(&DirectoryServiceClient::DisableClientAuthentication, request, handler, context);
+        }
+
+        /**
+         * <p>Deactivates access to directory data via the Directory Service Data API for
+         * the specified directory.</p><p><h3>See Also:</h3>   <a
+         * href="http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/DisableDirectoryDataAccess">AWS
+         * API Reference</a></p>
+         */
+        virtual Model::DisableDirectoryDataAccessOutcome DisableDirectoryDataAccess(const Model::DisableDirectoryDataAccessRequest& request) const;
+
+        /**
+         * A Callable wrapper for DisableDirectoryDataAccess that returns a future to the operation so that it can be executed in parallel to other requests.
+         */
+        template<typename DisableDirectoryDataAccessRequestT = Model::DisableDirectoryDataAccessRequest>
+        Model::DisableDirectoryDataAccessOutcomeCallable DisableDirectoryDataAccessCallable(const DisableDirectoryDataAccessRequestT& request) const
+        {
+            return SubmitCallable(&DirectoryServiceClient::DisableDirectoryDataAccess, request);
+        }
+
+        /**
+         * An Async wrapper for DisableDirectoryDataAccess that queues the request into a thread executor and triggers associated callback when operation has finished.
+         */
+        template<typename DisableDirectoryDataAccessRequestT = Model::DisableDirectoryDataAccessRequest>
+        void DisableDirectoryDataAccessAsync(const DisableDirectoryDataAccessRequestT& request, const DisableDirectoryDataAccessResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        {
+            return SubmitAsync(&DirectoryServiceClient::DisableDirectoryDataAccess, request, handler, context);
         }
 
         /**
@@ -1180,6 +1232,32 @@ namespace DirectoryService
         }
 
         /**
+         * <p>Enables access to directory data via the Directory Service Data API for the
+         * specified directory.</p><p><h3>See Also:</h3>   <a
+         * href="http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/EnableDirectoryDataAccess">AWS
+         * API Reference</a></p>
+         */
+        virtual Model::EnableDirectoryDataAccessOutcome EnableDirectoryDataAccess(const Model::EnableDirectoryDataAccessRequest& request) const;
+
+        /**
+         * A Callable wrapper for EnableDirectoryDataAccess that returns a future to the operation so that it can be executed in parallel to other requests.
+         */
+        template<typename EnableDirectoryDataAccessRequestT = Model::EnableDirectoryDataAccessRequest>
+        Model::EnableDirectoryDataAccessOutcomeCallable EnableDirectoryDataAccessCallable(const EnableDirectoryDataAccessRequestT& request) const
+        {
+            return SubmitCallable(&DirectoryServiceClient::EnableDirectoryDataAccess, request);
+        }
+
+        /**
+         * An Async wrapper for EnableDirectoryDataAccess that queues the request into a thread executor and triggers associated callback when operation has finished.
+         */
+        template<typename EnableDirectoryDataAccessRequestT = Model::EnableDirectoryDataAccessRequest>
+        void EnableDirectoryDataAccessAsync(const EnableDirectoryDataAccessRequestT& request, const EnableDirectoryDataAccessResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        {
+            return SubmitAsync(&DirectoryServiceClient::EnableDirectoryDataAccess, request, handler, context);
+        }
+
+        /**
          * <p>Activates the switch for the specific directory to always use LDAP secure
          * calls.</p><p><h3>See Also:</h3>   <a
          * href="http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/EnableLDAPS">AWS API
@@ -1266,13 +1344,13 @@ namespace DirectoryService
          * href="http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/GetDirectoryLimits">AWS
          * API Reference</a></p>
          */
-        virtual Model::GetDirectoryLimitsOutcome GetDirectoryLimits(const Model::GetDirectoryLimitsRequest& request) const;
+        virtual Model::GetDirectoryLimitsOutcome GetDirectoryLimits(const Model::GetDirectoryLimitsRequest& request = {}) const;
 
         /**
          * A Callable wrapper for GetDirectoryLimits that returns a future to the operation so that it can be executed in parallel to other requests.
          */
         template<typename GetDirectoryLimitsRequestT = Model::GetDirectoryLimitsRequest>
-        Model::GetDirectoryLimitsOutcomeCallable GetDirectoryLimitsCallable(const GetDirectoryLimitsRequestT& request) const
+        Model::GetDirectoryLimitsOutcomeCallable GetDirectoryLimitsCallable(const GetDirectoryLimitsRequestT& request = {}) const
         {
             return SubmitCallable(&DirectoryServiceClient::GetDirectoryLimits, request);
         }
@@ -1281,7 +1359,7 @@ namespace DirectoryService
          * An Async wrapper for GetDirectoryLimits that queues the request into a thread executor and triggers associated callback when operation has finished.
          */
         template<typename GetDirectoryLimitsRequestT = Model::GetDirectoryLimitsRequest>
-        void GetDirectoryLimitsAsync(const GetDirectoryLimitsRequestT& request, const GetDirectoryLimitsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        void GetDirectoryLimitsAsync(const GetDirectoryLimitsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr, const GetDirectoryLimitsRequestT& request = {}) const
         {
             return SubmitAsync(&DirectoryServiceClient::GetDirectoryLimits, request, handler, context);
         }
@@ -1370,13 +1448,13 @@ namespace DirectoryService
          * href="http://docs.aws.amazon.com/goto/WebAPI/ds-2015-04-16/ListLogSubscriptions">AWS
          * API Reference</a></p>
          */
-        virtual Model::ListLogSubscriptionsOutcome ListLogSubscriptions(const Model::ListLogSubscriptionsRequest& request) const;
+        virtual Model::ListLogSubscriptionsOutcome ListLogSubscriptions(const Model::ListLogSubscriptionsRequest& request = {}) const;
 
         /**
          * A Callable wrapper for ListLogSubscriptions that returns a future to the operation so that it can be executed in parallel to other requests.
          */
         template<typename ListLogSubscriptionsRequestT = Model::ListLogSubscriptionsRequest>
-        Model::ListLogSubscriptionsOutcomeCallable ListLogSubscriptionsCallable(const ListLogSubscriptionsRequestT& request) const
+        Model::ListLogSubscriptionsOutcomeCallable ListLogSubscriptionsCallable(const ListLogSubscriptionsRequestT& request = {}) const
         {
             return SubmitCallable(&DirectoryServiceClient::ListLogSubscriptions, request);
         }
@@ -1385,7 +1463,7 @@ namespace DirectoryService
          * An Async wrapper for ListLogSubscriptions that queues the request into a thread executor and triggers associated callback when operation has finished.
          */
         template<typename ListLogSubscriptionsRequestT = Model::ListLogSubscriptionsRequest>
-        void ListLogSubscriptionsAsync(const ListLogSubscriptionsRequestT& request, const ListLogSubscriptionsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        void ListLogSubscriptionsAsync(const ListLogSubscriptionsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr, const ListLogSubscriptionsRequestT& request = {}) const
         {
             return SubmitAsync(&DirectoryServiceClient::ListLogSubscriptions, request, handler, context);
         }
@@ -1602,9 +1680,10 @@ namespace DirectoryService
 
         /**
          * <p>Resets the password for any user in your Managed Microsoft AD or Simple AD
-         * directory.</p> <p>You can reset the password for any user in your directory with
-         * the following exceptions:</p> <ul> <li> <p>For Simple AD, you cannot reset the
-         * password for any user that is a member of either the <b>Domain Admins</b> or
+         * directory. Disabled users will become enabled and can be authenticated following
+         * the API call.</p> <p>You can reset the password for any user in your directory
+         * with the following exceptions:</p> <ul> <li> <p>For Simple AD, you cannot reset
+         * the password for any user that is a member of either the <b>Domain Admins</b> or
          * <b>Enterprise Admins</b> group except for the administrator user.</p> </li> <li>
          * <p>For Managed Microsoft AD, you can only reset the password for a user that is
          * in an OU based off of the NetBIOS name that you typed when you created your
@@ -1958,7 +2037,6 @@ namespace DirectoryService
       void init(const DirectoryServiceClientConfiguration& clientConfiguration);
 
       DirectoryServiceClientConfiguration m_clientConfiguration;
-      std::shared_ptr<Aws::Utils::Threading::Executor> m_executor;
       std::shared_ptr<DirectoryServiceEndpointProviderBase> m_endpointProvider;
   };
 
