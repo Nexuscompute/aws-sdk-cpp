@@ -13,15 +13,28 @@ using namespace Aws::Utils::Json;
 using namespace Aws::Utils;
 
 UpdateChannelRequest::UpdateChannelRequest() : 
+    m_audiencesHasBeenSet(false),
     m_channelNameHasBeenSet(false),
     m_fillerSlateHasBeenSet(false),
-    m_outputsHasBeenSet(false)
+    m_outputsHasBeenSet(false),
+    m_timeShiftConfigurationHasBeenSet(false)
 {
 }
 
 Aws::String UpdateChannelRequest::SerializePayload() const
 {
   JsonValue payload;
+
+  if(m_audiencesHasBeenSet)
+  {
+   Aws::Utils::Array<JsonValue> audiencesJsonList(m_audiences.size());
+   for(unsigned audiencesIndex = 0; audiencesIndex < audiencesJsonList.GetLength(); ++audiencesIndex)
+   {
+     audiencesJsonList[audiencesIndex].AsString(m_audiences[audiencesIndex]);
+   }
+   payload.WithArray("Audiences", std::move(audiencesJsonList));
+
+  }
 
   if(m_fillerSlateHasBeenSet)
   {
@@ -37,6 +50,12 @@ Aws::String UpdateChannelRequest::SerializePayload() const
      outputsJsonList[outputsIndex].AsObject(m_outputs[outputsIndex].Jsonize());
    }
    payload.WithArray("Outputs", std::move(outputsJsonList));
+
+  }
+
+  if(m_timeShiftConfigurationHasBeenSet)
+  {
+   payload.WithObject("TimeShiftConfiguration", m_timeShiftConfiguration.Jsonize());
 
   }
 

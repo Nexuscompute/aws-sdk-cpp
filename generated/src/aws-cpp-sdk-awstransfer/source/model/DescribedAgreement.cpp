@@ -29,22 +29,16 @@ DescribedAgreement::DescribedAgreement() :
     m_partnerProfileIdHasBeenSet(false),
     m_baseDirectoryHasBeenSet(false),
     m_accessRoleHasBeenSet(false),
-    m_tagsHasBeenSet(false)
+    m_tagsHasBeenSet(false),
+    m_preserveFilename(PreserveFilenameType::NOT_SET),
+    m_preserveFilenameHasBeenSet(false),
+    m_enforceMessageSigning(EnforceMessageSigningType::NOT_SET),
+    m_enforceMessageSigningHasBeenSet(false)
 {
 }
 
-DescribedAgreement::DescribedAgreement(JsonView jsonValue) : 
-    m_arnHasBeenSet(false),
-    m_agreementIdHasBeenSet(false),
-    m_descriptionHasBeenSet(false),
-    m_status(AgreementStatusType::NOT_SET),
-    m_statusHasBeenSet(false),
-    m_serverIdHasBeenSet(false),
-    m_localProfileIdHasBeenSet(false),
-    m_partnerProfileIdHasBeenSet(false),
-    m_baseDirectoryHasBeenSet(false),
-    m_accessRoleHasBeenSet(false),
-    m_tagsHasBeenSet(false)
+DescribedAgreement::DescribedAgreement(JsonView jsonValue)
+  : DescribedAgreement()
 {
   *this = jsonValue;
 }
@@ -124,6 +118,20 @@ DescribedAgreement& DescribedAgreement::operator =(JsonView jsonValue)
     m_tagsHasBeenSet = true;
   }
 
+  if(jsonValue.ValueExists("PreserveFilename"))
+  {
+    m_preserveFilename = PreserveFilenameTypeMapper::GetPreserveFilenameTypeForName(jsonValue.GetString("PreserveFilename"));
+
+    m_preserveFilenameHasBeenSet = true;
+  }
+
+  if(jsonValue.ValueExists("EnforceMessageSigning"))
+  {
+    m_enforceMessageSigning = EnforceMessageSigningTypeMapper::GetEnforceMessageSigningTypeForName(jsonValue.GetString("EnforceMessageSigning"));
+
+    m_enforceMessageSigningHasBeenSet = true;
+  }
+
   return *this;
 }
 
@@ -193,6 +201,16 @@ JsonValue DescribedAgreement::Jsonize() const
    }
    payload.WithArray("Tags", std::move(tagsJsonList));
 
+  }
+
+  if(m_preserveFilenameHasBeenSet)
+  {
+   payload.WithString("PreserveFilename", PreserveFilenameTypeMapper::GetNameForPreserveFilenameType(m_preserveFilename));
+  }
+
+  if(m_enforceMessageSigningHasBeenSet)
+  {
+   payload.WithString("EnforceMessageSigning", EnforceMessageSigningTypeMapper::GetNameForEnforceMessageSigningType(m_enforceMessageSigning));
   }
 
   return payload;

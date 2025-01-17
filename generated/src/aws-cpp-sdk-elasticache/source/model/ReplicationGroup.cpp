@@ -64,55 +64,13 @@ ReplicationGroup::ReplicationGroup() :
     m_transitEncryptionMode(TransitEncryptionMode::NOT_SET),
     m_transitEncryptionModeHasBeenSet(false),
     m_clusterMode(ClusterMode::NOT_SET),
-    m_clusterModeHasBeenSet(false)
+    m_clusterModeHasBeenSet(false),
+    m_engineHasBeenSet(false)
 {
 }
 
-ReplicationGroup::ReplicationGroup(const XmlNode& xmlNode) : 
-    m_replicationGroupIdHasBeenSet(false),
-    m_descriptionHasBeenSet(false),
-    m_globalReplicationGroupInfoHasBeenSet(false),
-    m_statusHasBeenSet(false),
-    m_pendingModifiedValuesHasBeenSet(false),
-    m_memberClustersHasBeenSet(false),
-    m_nodeGroupsHasBeenSet(false),
-    m_snapshottingClusterIdHasBeenSet(false),
-    m_automaticFailover(AutomaticFailoverStatus::NOT_SET),
-    m_automaticFailoverHasBeenSet(false),
-    m_multiAZ(MultiAZStatus::NOT_SET),
-    m_multiAZHasBeenSet(false),
-    m_configurationEndpointHasBeenSet(false),
-    m_snapshotRetentionLimit(0),
-    m_snapshotRetentionLimitHasBeenSet(false),
-    m_snapshotWindowHasBeenSet(false),
-    m_clusterEnabled(false),
-    m_clusterEnabledHasBeenSet(false),
-    m_cacheNodeTypeHasBeenSet(false),
-    m_authTokenEnabled(false),
-    m_authTokenEnabledHasBeenSet(false),
-    m_authTokenLastModifiedDateHasBeenSet(false),
-    m_transitEncryptionEnabled(false),
-    m_transitEncryptionEnabledHasBeenSet(false),
-    m_atRestEncryptionEnabled(false),
-    m_atRestEncryptionEnabledHasBeenSet(false),
-    m_memberClustersOutpostArnsHasBeenSet(false),
-    m_kmsKeyIdHasBeenSet(false),
-    m_aRNHasBeenSet(false),
-    m_userGroupIdsHasBeenSet(false),
-    m_logDeliveryConfigurationsHasBeenSet(false),
-    m_replicationGroupCreateTimeHasBeenSet(false),
-    m_dataTiering(DataTieringStatus::NOT_SET),
-    m_dataTieringHasBeenSet(false),
-    m_autoMinorVersionUpgrade(false),
-    m_autoMinorVersionUpgradeHasBeenSet(false),
-    m_networkType(NetworkType::NOT_SET),
-    m_networkTypeHasBeenSet(false),
-    m_ipDiscovery(IpDiscovery::NOT_SET),
-    m_ipDiscoveryHasBeenSet(false),
-    m_transitEncryptionMode(TransitEncryptionMode::NOT_SET),
-    m_transitEncryptionModeHasBeenSet(false),
-    m_clusterMode(ClusterMode::NOT_SET),
-    m_clusterModeHasBeenSet(false)
+ReplicationGroup::ReplicationGroup(const XmlNode& xmlNode)
+  : ReplicationGroup()
 {
   *this = xmlNode;
 }
@@ -339,6 +297,12 @@ ReplicationGroup& ReplicationGroup::operator =(const XmlNode& xmlNode)
       m_clusterMode = ClusterModeMapper::GetClusterModeForName(StringUtils::Trim(Aws::Utils::Xml::DecodeEscapedXmlText(clusterModeNode.GetText()).c_str()).c_str());
       m_clusterModeHasBeenSet = true;
     }
+    XmlNode engineNode = resultNode.FirstChild("Engine");
+    if(!engineNode.IsNull())
+    {
+      m_engine = Aws::Utils::Xml::DecodeEscapedXmlText(engineNode.GetText());
+      m_engineHasBeenSet = true;
+    }
   }
 
   return *this;
@@ -531,6 +495,11 @@ void ReplicationGroup::OutputToStream(Aws::OStream& oStream, const char* locatio
       oStream << location << index << locationValue << ".ClusterMode=" << ClusterModeMapper::GetNameForClusterMode(m_clusterMode) << "&";
   }
 
+  if(m_engineHasBeenSet)
+  {
+      oStream << location << index << locationValue << ".Engine=" << StringUtils::URLEncode(m_engine.c_str()) << "&";
+  }
+
 }
 
 void ReplicationGroup::OutputToStream(Aws::OStream& oStream, const char* location) const
@@ -688,6 +657,10 @@ void ReplicationGroup::OutputToStream(Aws::OStream& oStream, const char* locatio
   if(m_clusterModeHasBeenSet)
   {
       oStream << location << ".ClusterMode=" << ClusterModeMapper::GetNameForClusterMode(m_clusterMode) << "&";
+  }
+  if(m_engineHasBeenSet)
+  {
+      oStream << location << ".Engine=" << StringUtils::URLEncode(m_engine.c_str()) << "&";
   }
 }
 

@@ -26,8 +26,8 @@ namespace PrivateNetworks
   {
     public:
       typedef Aws::Client::AWSJsonClient BASECLASS;
-      static const char* SERVICE_NAME;
-      static const char* ALLOCATION_TAG;
+      static const char* GetServiceName();
+      static const char* GetAllocationTag();
 
       typedef PrivateNetworksClientConfiguration ClientConfigurationType;
       typedef PrivateNetworksEndpointProvider EndpointProviderType;
@@ -37,14 +37,14 @@ namespace PrivateNetworks
         * is not specified, it will be initialized to default values.
         */
         PrivateNetworksClient(const Aws::PrivateNetworks::PrivateNetworksClientConfiguration& clientConfiguration = Aws::PrivateNetworks::PrivateNetworksClientConfiguration(),
-                              std::shared_ptr<PrivateNetworksEndpointProviderBase> endpointProvider = Aws::MakeShared<PrivateNetworksEndpointProvider>(ALLOCATION_TAG));
+                              std::shared_ptr<PrivateNetworksEndpointProviderBase> endpointProvider = nullptr);
 
        /**
         * Initializes client to use SimpleAWSCredentialsProvider, with default http client factory, and optional client config. If client config
         * is not specified, it will be initialized to default values.
         */
         PrivateNetworksClient(const Aws::Auth::AWSCredentials& credentials,
-                              std::shared_ptr<PrivateNetworksEndpointProviderBase> endpointProvider = Aws::MakeShared<PrivateNetworksEndpointProvider>(ALLOCATION_TAG),
+                              std::shared_ptr<PrivateNetworksEndpointProviderBase> endpointProvider = nullptr,
                               const Aws::PrivateNetworks::PrivateNetworksClientConfiguration& clientConfiguration = Aws::PrivateNetworks::PrivateNetworksClientConfiguration());
 
        /**
@@ -52,7 +52,7 @@ namespace PrivateNetworks
         * the default http client factory will be used
         */
         PrivateNetworksClient(const std::shared_ptr<Aws::Auth::AWSCredentialsProvider>& credentialsProvider,
-                              std::shared_ptr<PrivateNetworksEndpointProviderBase> endpointProvider = Aws::MakeShared<PrivateNetworksEndpointProvider>(ALLOCATION_TAG),
+                              std::shared_ptr<PrivateNetworksEndpointProviderBase> endpointProvider = nullptr,
                               const Aws::PrivateNetworks::PrivateNetworksClientConfiguration& clientConfiguration = Aws::PrivateNetworks::PrivateNetworksClientConfiguration());
 
 
@@ -539,13 +539,13 @@ namespace PrivateNetworks
          * href="http://docs.aws.amazon.com/goto/WebAPI/privatenetworks-2021-12-03/ListNetworks">AWS
          * API Reference</a></p>
          */
-        virtual Model::ListNetworksOutcome ListNetworks(const Model::ListNetworksRequest& request) const;
+        virtual Model::ListNetworksOutcome ListNetworks(const Model::ListNetworksRequest& request = {}) const;
 
         /**
          * A Callable wrapper for ListNetworks that returns a future to the operation so that it can be executed in parallel to other requests.
          */
         template<typename ListNetworksRequestT = Model::ListNetworksRequest>
-        Model::ListNetworksOutcomeCallable ListNetworksCallable(const ListNetworksRequestT& request) const
+        Model::ListNetworksOutcomeCallable ListNetworksCallable(const ListNetworksRequestT& request = {}) const
         {
             return SubmitCallable(&PrivateNetworksClient::ListNetworks, request);
         }
@@ -554,7 +554,7 @@ namespace PrivateNetworks
          * An Async wrapper for ListNetworks that queues the request into a thread executor and triggers associated callback when operation has finished.
          */
         template<typename ListNetworksRequestT = Model::ListNetworksRequest>
-        void ListNetworksAsync(const ListNetworksRequestT& request, const ListNetworksResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        void ListNetworksAsync(const ListNetworksResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr, const ListNetworksRequestT& request = {}) const
         {
             return SubmitAsync(&PrivateNetworksClient::ListNetworks, request, handler, context);
         }
@@ -618,32 +618,37 @@ namespace PrivateNetworks
          * href="http://docs.aws.amazon.com/goto/WebAPI/privatenetworks-2021-12-03/Ping">AWS
          * API Reference</a></p>
          */
-        virtual Model::PingOutcome Ping() const;
+        virtual Model::PingOutcome Ping(const Model::PingRequest& request = {}) const;
 
         /**
          * A Callable wrapper for Ping that returns a future to the operation so that it can be executed in parallel to other requests.
          */
-        template<typename = void>
-        Model::PingOutcomeCallable PingCallable() const
+        template<typename PingRequestT = Model::PingRequest>
+        Model::PingOutcomeCallable PingCallable(const PingRequestT& request = {}) const
         {
-            return SubmitCallable(&PrivateNetworksClient::Ping);
+            return SubmitCallable(&PrivateNetworksClient::Ping, request);
         }
 
         /**
          * An Async wrapper for Ping that queues the request into a thread executor and triggers associated callback when operation has finished.
          */
-        template<typename = void>
-        void PingAsync(const PingResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        template<typename PingRequestT = Model::PingRequest>
+        void PingAsync(const PingResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr, const PingRequestT& request = {}) const
         {
-            return SubmitAsync(&PrivateNetworksClient::Ping, handler, context);
+            return SubmitAsync(&PrivateNetworksClient::Ping, request, handler, context);
         }
+
         /**
-         * <p>Starts an update of the specified network resource.</p> <p>After you submit a
-         * request to replace or return a network resource, the status of the network
-         * resource is <code>CREATING_SHIPPING_LABEL</code>. The shipping label is
-         * available when the status of the network resource is
-         * <code>PENDING_RETURN</code>. After the network resource is successfully
-         * returned, its status is <code>DELETED</code>. For more information, see <a
+         * <p>Use this action to do the following tasks:</p> <ul> <li> <p>Update the
+         * duration and renewal status of the commitment period for a radio unit. The
+         * update goes into effect immediately.</p> </li> <li> <p>Request a replacement for
+         * a network resource.</p> </li> <li> <p>Request that you return a network
+         * resource.</p> </li> </ul> <p>After you submit a request to replace or return a
+         * network resource, the status of the network resource changes to
+         * <code>CREATING_SHIPPING_LABEL</code>. The shipping label is available when the
+         * status of the network resource is <code>PENDING_RETURN</code>. After the network
+         * resource is successfully returned, its status changes to <code>DELETED</code>.
+         * For more information, see <a
          * href="https://docs.aws.amazon.com/private-networks/latest/userguide/radio-units.html#return-radio-unit">Return
          * a radio unit</a>.</p><p><h3>See Also:</h3>   <a
          * href="http://docs.aws.amazon.com/goto/WebAPI/privatenetworks-2021-12-03/StartNetworkResourceUpdate">AWS
@@ -777,7 +782,6 @@ namespace PrivateNetworks
       void init(const PrivateNetworksClientConfiguration& clientConfiguration);
 
       PrivateNetworksClientConfiguration m_clientConfiguration;
-      std::shared_ptr<Aws::Utils::Threading::Executor> m_executor;
       std::shared_ptr<PrivateNetworksEndpointProviderBase> m_endpointProvider;
   };
 

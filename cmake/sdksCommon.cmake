@@ -152,9 +152,11 @@ list(APPEND HIGH_LEVEL_SDK_LIST "s3-encryption")
 list(APPEND HIGH_LEVEL_SDK_LIST "text-to-speech")
 
 set(SDK_TEST_PROJECT_LIST "")
+list(APPEND SDK_TEST_PROJECT_LIST "cloudfront:tests/aws-cpp-sdk-cloudfront-integration-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "cognito-identity:tests/aws-cpp-sdk-cognitoidentity-integration-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "core:tests/aws-cpp-sdk-core-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "dynamodb:tests/aws-cpp-sdk-dynamodb-integration-tests")
+list(APPEND SDK_TEST_PROJECT_LIST "dynamodb:tests/aws-cpp-sdk-dynamodb-unit-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "ec2:tests/aws-cpp-sdk-ec2-integration-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "elasticfilesystem:tests/aws-cpp-sdk-elasticfilesystem-integration-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "identity-management:tests/aws-cpp-sdk-identity-management-tests")
@@ -166,15 +168,17 @@ list(APPEND SDK_TEST_PROJECT_LIST "monitoring:tests/aws-cpp-sdk-monitoring-integ
 list(APPEND SDK_TEST_PROJECT_LIST "rds:tests/aws-cpp-sdk-rds-integration-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "redshift:tests/aws-cpp-sdk-redshift-integration-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "s3:tests/aws-cpp-sdk-s3-integration-tests")
+list(APPEND SDK_TEST_PROJECT_LIST "s3:tests/aws-cpp-sdk-s3-unit-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "s3-crt:tests/aws-cpp-sdk-s3-crt-integration-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "s3-encryption:tests/aws-cpp-sdk-s3-encryption-tests,tests/aws-cpp-sdk-s3-encryption-integration-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "s3control:tests/aws-cpp-sdk-s3control-integration-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "sqs:tests/aws-cpp-sdk-sqs-integration-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "transfer:tests/aws-cpp-sdk-transfer-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "text-to-speech:tests/aws-cpp-sdk-text-to-speech-tests,tests/aws-cpp-sdk-polly-sample")
-list(APPEND SDK_TEST_PROJECT_LIST "transcribestreaming:tests/aws-cpp-sdk-transcribestreaming-integration-tests")
+list(APPEND SDK_TEST_PROJECT_LIST "transcribestreaming:tests/aws-cpp-sdk-transcribestreaming-integ-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "eventbridge:tests/aws-cpp-sdk-eventbridge-tests")
 list(APPEND SDK_TEST_PROJECT_LIST "timestream-query:tests/aws-cpp-sdk-timestream-query-integration-tests")
+list(APPEND SDK_TEST_PROJECT_LIST "dsql:tests/aws-cpp-sdk-dsql-unit-tests")
 
 build_sdk_list()
 
@@ -207,6 +211,7 @@ list(APPEND TEST_DEPENDENCY_LIST "s3control:s3,access-management,cognito-identit
 list(APPEND TEST_DEPENDENCY_LIST "sqs:access-management,cognito-identity,iam,core")
 list(APPEND TEST_DEPENDENCY_LIST "text-to-speech:polly,core")
 list(APPEND TEST_DEPENDENCY_LIST "transfer:s3,core")
+list(APPEND TEST_DEPENDENCY_LIST "logs:access-management,cognito-identity,iam,core")
 
 # make a list of the generated clients
 set(GENERATED_SERVICE_LIST "")

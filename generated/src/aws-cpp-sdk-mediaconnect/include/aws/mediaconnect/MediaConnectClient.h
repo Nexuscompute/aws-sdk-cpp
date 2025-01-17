@@ -22,8 +22,8 @@ namespace MediaConnect
   {
     public:
       typedef Aws::Client::AWSJsonClient BASECLASS;
-      static const char* SERVICE_NAME;
-      static const char* ALLOCATION_TAG;
+      static const char* GetServiceName();
+      static const char* GetAllocationTag();
 
       typedef MediaConnectClientConfiguration ClientConfigurationType;
       typedef MediaConnectEndpointProvider EndpointProviderType;
@@ -33,14 +33,14 @@ namespace MediaConnect
         * is not specified, it will be initialized to default values.
         */
         MediaConnectClient(const Aws::MediaConnect::MediaConnectClientConfiguration& clientConfiguration = Aws::MediaConnect::MediaConnectClientConfiguration(),
-                           std::shared_ptr<MediaConnectEndpointProviderBase> endpointProvider = Aws::MakeShared<MediaConnectEndpointProvider>(ALLOCATION_TAG));
+                           std::shared_ptr<MediaConnectEndpointProviderBase> endpointProvider = nullptr);
 
        /**
         * Initializes client to use SimpleAWSCredentialsProvider, with default http client factory, and optional client config. If client config
         * is not specified, it will be initialized to default values.
         */
         MediaConnectClient(const Aws::Auth::AWSCredentials& credentials,
-                           std::shared_ptr<MediaConnectEndpointProviderBase> endpointProvider = Aws::MakeShared<MediaConnectEndpointProvider>(ALLOCATION_TAG),
+                           std::shared_ptr<MediaConnectEndpointProviderBase> endpointProvider = nullptr,
                            const Aws::MediaConnect::MediaConnectClientConfiguration& clientConfiguration = Aws::MediaConnect::MediaConnectClientConfiguration());
 
        /**
@@ -48,7 +48,7 @@ namespace MediaConnect
         * the default http client factory will be used
         */
         MediaConnectClient(const std::shared_ptr<Aws::Auth::AWSCredentialsProvider>& credentialsProvider,
-                           std::shared_ptr<MediaConnectEndpointProviderBase> endpointProvider = Aws::MakeShared<MediaConnectEndpointProvider>(ALLOCATION_TAG),
+                           std::shared_ptr<MediaConnectEndpointProviderBase> endpointProvider = nullptr,
                            const Aws::MediaConnect::MediaConnectClientConfiguration& clientConfiguration = Aws::MediaConnect::MediaConnectClientConfiguration());
 
 
@@ -466,6 +466,58 @@ namespace MediaConnect
         }
 
         /**
+         * Displays details of the flow's source stream. The response contains information
+         * about the contents of the stream and its programs.<p><h3>See Also:</h3>   <a
+         * href="http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/DescribeFlowSourceMetadata">AWS
+         * API Reference</a></p>
+         */
+        virtual Model::DescribeFlowSourceMetadataOutcome DescribeFlowSourceMetadata(const Model::DescribeFlowSourceMetadataRequest& request) const;
+
+        /**
+         * A Callable wrapper for DescribeFlowSourceMetadata that returns a future to the operation so that it can be executed in parallel to other requests.
+         */
+        template<typename DescribeFlowSourceMetadataRequestT = Model::DescribeFlowSourceMetadataRequest>
+        Model::DescribeFlowSourceMetadataOutcomeCallable DescribeFlowSourceMetadataCallable(const DescribeFlowSourceMetadataRequestT& request) const
+        {
+            return SubmitCallable(&MediaConnectClient::DescribeFlowSourceMetadata, request);
+        }
+
+        /**
+         * An Async wrapper for DescribeFlowSourceMetadata that queues the request into a thread executor and triggers associated callback when operation has finished.
+         */
+        template<typename DescribeFlowSourceMetadataRequestT = Model::DescribeFlowSourceMetadataRequest>
+        void DescribeFlowSourceMetadataAsync(const DescribeFlowSourceMetadataRequestT& request, const DescribeFlowSourceMetadataResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        {
+            return SubmitAsync(&MediaConnectClient::DescribeFlowSourceMetadata, request, handler, context);
+        }
+
+        /**
+         * Displays the thumbnail details of a flow's source stream.<p><h3>See Also:</h3>  
+         * <a
+         * href="http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/DescribeFlowSourceThumbnail">AWS
+         * API Reference</a></p>
+         */
+        virtual Model::DescribeFlowSourceThumbnailOutcome DescribeFlowSourceThumbnail(const Model::DescribeFlowSourceThumbnailRequest& request) const;
+
+        /**
+         * A Callable wrapper for DescribeFlowSourceThumbnail that returns a future to the operation so that it can be executed in parallel to other requests.
+         */
+        template<typename DescribeFlowSourceThumbnailRequestT = Model::DescribeFlowSourceThumbnailRequest>
+        Model::DescribeFlowSourceThumbnailOutcomeCallable DescribeFlowSourceThumbnailCallable(const DescribeFlowSourceThumbnailRequestT& request) const
+        {
+            return SubmitCallable(&MediaConnectClient::DescribeFlowSourceThumbnail, request);
+        }
+
+        /**
+         * An Async wrapper for DescribeFlowSourceThumbnail that queues the request into a thread executor and triggers associated callback when operation has finished.
+         */
+        template<typename DescribeFlowSourceThumbnailRequestT = Model::DescribeFlowSourceThumbnailRequest>
+        void DescribeFlowSourceThumbnailAsync(const DescribeFlowSourceThumbnailRequestT& request, const DescribeFlowSourceThumbnailResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        {
+            return SubmitAsync(&MediaConnectClient::DescribeFlowSourceThumbnail, request, handler, context);
+        }
+
+        /**
          * Displays the details of a gateway. The response includes the gateway ARN, name,
          * and CIDR blocks, as well as details about the networks.<p><h3>See Also:</h3>  
          * <a
@@ -604,13 +656,13 @@ namespace MediaConnect
          * href="http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListBridges">AWS
          * API Reference</a></p>
          */
-        virtual Model::ListBridgesOutcome ListBridges(const Model::ListBridgesRequest& request) const;
+        virtual Model::ListBridgesOutcome ListBridges(const Model::ListBridgesRequest& request = {}) const;
 
         /**
          * A Callable wrapper for ListBridges that returns a future to the operation so that it can be executed in parallel to other requests.
          */
         template<typename ListBridgesRequestT = Model::ListBridgesRequest>
-        Model::ListBridgesOutcomeCallable ListBridgesCallable(const ListBridgesRequestT& request) const
+        Model::ListBridgesOutcomeCallable ListBridgesCallable(const ListBridgesRequestT& request = {}) const
         {
             return SubmitCallable(&MediaConnectClient::ListBridges, request);
         }
@@ -619,7 +671,7 @@ namespace MediaConnect
          * An Async wrapper for ListBridges that queues the request into a thread executor and triggers associated callback when operation has finished.
          */
         template<typename ListBridgesRequestT = Model::ListBridgesRequest>
-        void ListBridgesAsync(const ListBridgesRequestT& request, const ListBridgesResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        void ListBridgesAsync(const ListBridgesResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr, const ListBridgesRequestT& request = {}) const
         {
             return SubmitAsync(&MediaConnectClient::ListBridges, request, handler, context);
         }
@@ -630,13 +682,13 @@ namespace MediaConnect
          * href="http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListEntitlements">AWS
          * API Reference</a></p>
          */
-        virtual Model::ListEntitlementsOutcome ListEntitlements(const Model::ListEntitlementsRequest& request) const;
+        virtual Model::ListEntitlementsOutcome ListEntitlements(const Model::ListEntitlementsRequest& request = {}) const;
 
         /**
          * A Callable wrapper for ListEntitlements that returns a future to the operation so that it can be executed in parallel to other requests.
          */
         template<typename ListEntitlementsRequestT = Model::ListEntitlementsRequest>
-        Model::ListEntitlementsOutcomeCallable ListEntitlementsCallable(const ListEntitlementsRequestT& request) const
+        Model::ListEntitlementsOutcomeCallable ListEntitlementsCallable(const ListEntitlementsRequestT& request = {}) const
         {
             return SubmitCallable(&MediaConnectClient::ListEntitlements, request);
         }
@@ -645,7 +697,7 @@ namespace MediaConnect
          * An Async wrapper for ListEntitlements that queues the request into a thread executor and triggers associated callback when operation has finished.
          */
         template<typename ListEntitlementsRequestT = Model::ListEntitlementsRequest>
-        void ListEntitlementsAsync(const ListEntitlementsRequestT& request, const ListEntitlementsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        void ListEntitlementsAsync(const ListEntitlementsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr, const ListEntitlementsRequestT& request = {}) const
         {
             return SubmitAsync(&MediaConnectClient::ListEntitlements, request, handler, context);
         }
@@ -656,13 +708,13 @@ namespace MediaConnect
          * href="http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListFlows">AWS
          * API Reference</a></p>
          */
-        virtual Model::ListFlowsOutcome ListFlows(const Model::ListFlowsRequest& request) const;
+        virtual Model::ListFlowsOutcome ListFlows(const Model::ListFlowsRequest& request = {}) const;
 
         /**
          * A Callable wrapper for ListFlows that returns a future to the operation so that it can be executed in parallel to other requests.
          */
         template<typename ListFlowsRequestT = Model::ListFlowsRequest>
-        Model::ListFlowsOutcomeCallable ListFlowsCallable(const ListFlowsRequestT& request) const
+        Model::ListFlowsOutcomeCallable ListFlowsCallable(const ListFlowsRequestT& request = {}) const
         {
             return SubmitCallable(&MediaConnectClient::ListFlows, request);
         }
@@ -671,7 +723,7 @@ namespace MediaConnect
          * An Async wrapper for ListFlows that queues the request into a thread executor and triggers associated callback when operation has finished.
          */
         template<typename ListFlowsRequestT = Model::ListFlowsRequest>
-        void ListFlowsAsync(const ListFlowsRequestT& request, const ListFlowsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        void ListFlowsAsync(const ListFlowsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr, const ListFlowsRequestT& request = {}) const
         {
             return SubmitAsync(&MediaConnectClient::ListFlows, request, handler, context);
         }
@@ -684,13 +736,13 @@ namespace MediaConnect
          * href="http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListGatewayInstances">AWS
          * API Reference</a></p>
          */
-        virtual Model::ListGatewayInstancesOutcome ListGatewayInstances(const Model::ListGatewayInstancesRequest& request) const;
+        virtual Model::ListGatewayInstancesOutcome ListGatewayInstances(const Model::ListGatewayInstancesRequest& request = {}) const;
 
         /**
          * A Callable wrapper for ListGatewayInstances that returns a future to the operation so that it can be executed in parallel to other requests.
          */
         template<typename ListGatewayInstancesRequestT = Model::ListGatewayInstancesRequest>
-        Model::ListGatewayInstancesOutcomeCallable ListGatewayInstancesCallable(const ListGatewayInstancesRequestT& request) const
+        Model::ListGatewayInstancesOutcomeCallable ListGatewayInstancesCallable(const ListGatewayInstancesRequestT& request = {}) const
         {
             return SubmitCallable(&MediaConnectClient::ListGatewayInstances, request);
         }
@@ -699,7 +751,7 @@ namespace MediaConnect
          * An Async wrapper for ListGatewayInstances that queues the request into a thread executor and triggers associated callback when operation has finished.
          */
         template<typename ListGatewayInstancesRequestT = Model::ListGatewayInstancesRequest>
-        void ListGatewayInstancesAsync(const ListGatewayInstancesRequestT& request, const ListGatewayInstancesResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        void ListGatewayInstancesAsync(const ListGatewayInstancesResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr, const ListGatewayInstancesRequestT& request = {}) const
         {
             return SubmitAsync(&MediaConnectClient::ListGatewayInstances, request, handler, context);
         }
@@ -710,13 +762,13 @@ namespace MediaConnect
          * href="http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListGateways">AWS
          * API Reference</a></p>
          */
-        virtual Model::ListGatewaysOutcome ListGateways(const Model::ListGatewaysRequest& request) const;
+        virtual Model::ListGatewaysOutcome ListGateways(const Model::ListGatewaysRequest& request = {}) const;
 
         /**
          * A Callable wrapper for ListGateways that returns a future to the operation so that it can be executed in parallel to other requests.
          */
         template<typename ListGatewaysRequestT = Model::ListGatewaysRequest>
-        Model::ListGatewaysOutcomeCallable ListGatewaysCallable(const ListGatewaysRequestT& request) const
+        Model::ListGatewaysOutcomeCallable ListGatewaysCallable(const ListGatewaysRequestT& request = {}) const
         {
             return SubmitCallable(&MediaConnectClient::ListGateways, request);
         }
@@ -725,7 +777,7 @@ namespace MediaConnect
          * An Async wrapper for ListGateways that queues the request into a thread executor and triggers associated callback when operation has finished.
          */
         template<typename ListGatewaysRequestT = Model::ListGatewaysRequest>
-        void ListGatewaysAsync(const ListGatewaysRequestT& request, const ListGatewaysResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        void ListGatewaysAsync(const ListGatewaysResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr, const ListGatewaysRequestT& request = {}) const
         {
             return SubmitAsync(&MediaConnectClient::ListGateways, request, handler, context);
         }
@@ -738,13 +790,13 @@ namespace MediaConnect
          * href="http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListOfferings">AWS
          * API Reference</a></p>
          */
-        virtual Model::ListOfferingsOutcome ListOfferings(const Model::ListOfferingsRequest& request) const;
+        virtual Model::ListOfferingsOutcome ListOfferings(const Model::ListOfferingsRequest& request = {}) const;
 
         /**
          * A Callable wrapper for ListOfferings that returns a future to the operation so that it can be executed in parallel to other requests.
          */
         template<typename ListOfferingsRequestT = Model::ListOfferingsRequest>
-        Model::ListOfferingsOutcomeCallable ListOfferingsCallable(const ListOfferingsRequestT& request) const
+        Model::ListOfferingsOutcomeCallable ListOfferingsCallable(const ListOfferingsRequestT& request = {}) const
         {
             return SubmitCallable(&MediaConnectClient::ListOfferings, request);
         }
@@ -753,7 +805,7 @@ namespace MediaConnect
          * An Async wrapper for ListOfferings that queues the request into a thread executor and triggers associated callback when operation has finished.
          */
         template<typename ListOfferingsRequestT = Model::ListOfferingsRequest>
-        void ListOfferingsAsync(const ListOfferingsRequestT& request, const ListOfferingsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        void ListOfferingsAsync(const ListOfferingsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr, const ListOfferingsRequestT& request = {}) const
         {
             return SubmitAsync(&MediaConnectClient::ListOfferings, request, handler, context);
         }
@@ -765,13 +817,13 @@ namespace MediaConnect
          * href="http://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListReservations">AWS
          * API Reference</a></p>
          */
-        virtual Model::ListReservationsOutcome ListReservations(const Model::ListReservationsRequest& request) const;
+        virtual Model::ListReservationsOutcome ListReservations(const Model::ListReservationsRequest& request = {}) const;
 
         /**
          * A Callable wrapper for ListReservations that returns a future to the operation so that it can be executed in parallel to other requests.
          */
         template<typename ListReservationsRequestT = Model::ListReservationsRequest>
-        Model::ListReservationsOutcomeCallable ListReservationsCallable(const ListReservationsRequestT& request) const
+        Model::ListReservationsOutcomeCallable ListReservationsCallable(const ListReservationsRequestT& request = {}) const
         {
             return SubmitCallable(&MediaConnectClient::ListReservations, request);
         }
@@ -780,7 +832,7 @@ namespace MediaConnect
          * An Async wrapper for ListReservations that queues the request into a thread executor and triggers associated callback when operation has finished.
          */
         template<typename ListReservationsRequestT = Model::ListReservationsRequest>
-        void ListReservationsAsync(const ListReservationsRequestT& request, const ListReservationsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr) const
+        void ListReservationsAsync(const ListReservationsResponseReceivedHandler& handler, const std::shared_ptr<const Aws::Client::AsyncCallerContext>& context = nullptr, const ListReservationsRequestT& request = {}) const
         {
             return SubmitAsync(&MediaConnectClient::ListReservations, request, handler, context);
         }
@@ -1388,7 +1440,6 @@ namespace MediaConnect
       void init(const MediaConnectClientConfiguration& clientConfiguration);
 
       MediaConnectClientConfiguration m_clientConfiguration;
-      std::shared_ptr<Aws::Utils::Threading::Executor> m_executor;
       std::shared_ptr<MediaConnectEndpointProviderBase> m_endpointProvider;
   };
 

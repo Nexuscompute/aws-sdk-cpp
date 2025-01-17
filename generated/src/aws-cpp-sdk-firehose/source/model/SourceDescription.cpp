@@ -19,12 +19,14 @@ namespace Model
 {
 
 SourceDescription::SourceDescription() : 
-    m_kinesisStreamSourceDescriptionHasBeenSet(false)
+    m_kinesisStreamSourceDescriptionHasBeenSet(false),
+    m_mSKSourceDescriptionHasBeenSet(false),
+    m_databaseSourceDescriptionHasBeenSet(false)
 {
 }
 
-SourceDescription::SourceDescription(JsonView jsonValue) : 
-    m_kinesisStreamSourceDescriptionHasBeenSet(false)
+SourceDescription::SourceDescription(JsonView jsonValue)
+  : SourceDescription()
 {
   *this = jsonValue;
 }
@@ -38,6 +40,20 @@ SourceDescription& SourceDescription::operator =(JsonView jsonValue)
     m_kinesisStreamSourceDescriptionHasBeenSet = true;
   }
 
+  if(jsonValue.ValueExists("MSKSourceDescription"))
+  {
+    m_mSKSourceDescription = jsonValue.GetObject("MSKSourceDescription");
+
+    m_mSKSourceDescriptionHasBeenSet = true;
+  }
+
+  if(jsonValue.ValueExists("DatabaseSourceDescription"))
+  {
+    m_databaseSourceDescription = jsonValue.GetObject("DatabaseSourceDescription");
+
+    m_databaseSourceDescriptionHasBeenSet = true;
+  }
+
   return *this;
 }
 
@@ -48,6 +64,18 @@ JsonValue SourceDescription::Jsonize() const
   if(m_kinesisStreamSourceDescriptionHasBeenSet)
   {
    payload.WithObject("KinesisStreamSourceDescription", m_kinesisStreamSourceDescription.Jsonize());
+
+  }
+
+  if(m_mSKSourceDescriptionHasBeenSet)
+  {
+   payload.WithObject("MSKSourceDescription", m_mSKSourceDescription.Jsonize());
+
+  }
+
+  if(m_databaseSourceDescriptionHasBeenSet)
+  {
+   payload.WithObject("DatabaseSourceDescription", m_databaseSourceDescription.Jsonize());
 
   }
 

@@ -22,6 +22,9 @@
 #include <aws/worklink/WorkLinkErrorMarshaller.h>
 #include <aws/worklink/WorkLinkEndpointProvider.h>
 
+#include <smithy/tracing/TracingUtils.h>
+
+
 using namespace Aws;
 using namespace Aws::Auth;
 using namespace Aws::Client;
@@ -29,10 +32,19 @@ using namespace Aws::WorkLink;
 using namespace Aws::WorkLink::Model;
 using namespace Aws::Http;
 using namespace Aws::Utils::Json;
+using namespace smithy::components::tracing;
 using ResolveEndpointOutcome = Aws::Endpoint::ResolveEndpointOutcome;
 
-const char* WorkLinkClient::SERVICE_NAME = "worklink";
-const char* WorkLinkClient::ALLOCATION_TAG = "WorkLinkClient";
+namespace Aws
+{
+  namespace WorkLink
+  {
+    const char SERVICE_NAME[] = "worklink";
+    const char ALLOCATION_TAG[] = "WorkLinkClient";
+  }
+}
+const char* WorkLinkClient::GetServiceName() {return SERVICE_NAME;}
+const char* WorkLinkClient::GetAllocationTag() {return ALLOCATION_TAG;}
 
 WorkLinkClient::WorkLinkClient(const WorkLink::WorkLinkClientConfiguration& clientConfiguration,
                                std::shared_ptr<WorkLinkEndpointProviderBase> endpointProvider) :
@@ -43,8 +55,7 @@ WorkLinkClient::WorkLinkClient(const WorkLink::WorkLinkClientConfiguration& clie
                                              Aws::Region::ComputeSignerRegion(clientConfiguration.region)),
             Aws::MakeShared<WorkLinkErrorMarshaller>(ALLOCATION_TAG)),
   m_clientConfiguration(clientConfiguration),
-  m_executor(clientConfiguration.executor),
-  m_endpointProvider(std::move(endpointProvider))
+  m_endpointProvider(endpointProvider ? std::move(endpointProvider) : Aws::MakeShared<WorkLinkEndpointProvider>(ALLOCATION_TAG))
 {
   init(m_clientConfiguration);
 }
@@ -59,8 +70,7 @@ WorkLinkClient::WorkLinkClient(const AWSCredentials& credentials,
                                              Aws::Region::ComputeSignerRegion(clientConfiguration.region)),
             Aws::MakeShared<WorkLinkErrorMarshaller>(ALLOCATION_TAG)),
     m_clientConfiguration(clientConfiguration),
-    m_executor(clientConfiguration.executor),
-    m_endpointProvider(std::move(endpointProvider))
+    m_endpointProvider(endpointProvider ? std::move(endpointProvider) : Aws::MakeShared<WorkLinkEndpointProvider>(ALLOCATION_TAG))
 {
   init(m_clientConfiguration);
 }
@@ -75,8 +85,7 @@ WorkLinkClient::WorkLinkClient(const std::shared_ptr<AWSCredentialsProvider>& cr
                                              Aws::Region::ComputeSignerRegion(clientConfiguration.region)),
             Aws::MakeShared<WorkLinkErrorMarshaller>(ALLOCATION_TAG)),
     m_clientConfiguration(clientConfiguration),
-    m_executor(clientConfiguration.executor),
-    m_endpointProvider(std::move(endpointProvider))
+    m_endpointProvider(endpointProvider ? std::move(endpointProvider) : Aws::MakeShared<WorkLinkEndpointProvider>(ALLOCATION_TAG))
 {
   init(m_clientConfiguration);
 }
@@ -90,7 +99,6 @@ WorkLinkClient::WorkLinkClient(const std::shared_ptr<AWSCredentialsProvider>& cr
                                              Aws::Region::ComputeSignerRegion(clientConfiguration.region)),
             Aws::MakeShared<WorkLinkErrorMarshaller>(ALLOCATION_TAG)),
   m_clientConfiguration(clientConfiguration),
-  m_executor(clientConfiguration.executor),
   m_endpointProvider(Aws::MakeShared<WorkLinkEndpointProvider>(ALLOCATION_TAG))
 {
   init(m_clientConfiguration);
@@ -105,7 +113,6 @@ WorkLinkClient::WorkLinkClient(const AWSCredentials& credentials,
                                              Aws::Region::ComputeSignerRegion(clientConfiguration.region)),
             Aws::MakeShared<WorkLinkErrorMarshaller>(ALLOCATION_TAG)),
     m_clientConfiguration(clientConfiguration),
-    m_executor(clientConfiguration.executor),
     m_endpointProvider(Aws::MakeShared<WorkLinkEndpointProvider>(ALLOCATION_TAG))
 {
   init(m_clientConfiguration);
@@ -120,7 +127,6 @@ WorkLinkClient::WorkLinkClient(const std::shared_ptr<AWSCredentialsProvider>& cr
                                              Aws::Region::ComputeSignerRegion(clientConfiguration.region)),
             Aws::MakeShared<WorkLinkErrorMarshaller>(ALLOCATION_TAG)),
     m_clientConfiguration(clientConfiguration),
-    m_executor(clientConfiguration.executor),
     m_endpointProvider(Aws::MakeShared<WorkLinkEndpointProvider>(ALLOCATION_TAG))
 {
   init(m_clientConfiguration);
@@ -129,6 +135,7 @@ WorkLinkClient::WorkLinkClient(const std::shared_ptr<AWSCredentialsProvider>& cr
     /* End of legacy constructors due deprecation */
 WorkLinkClient::~WorkLinkClient()
 {
+  ShutdownSdkClient(this, -1);
 }
 
 std::shared_ptr<WorkLinkEndpointProviderBase>& WorkLinkClient::accessEndpointProvider()
@@ -139,6 +146,14 @@ std::shared_ptr<WorkLinkEndpointProviderBase>& WorkLinkClient::accessEndpointPro
 void WorkLinkClient::init(const WorkLink::WorkLinkClientConfiguration& config)
 {
   AWSClient::SetServiceClientName("WorkLink");
+  if (!m_clientConfiguration.executor) {
+    if (!m_clientConfiguration.configFactories.executorCreateFn()) {
+      AWS_LOGSTREAM_FATAL(ALLOCATION_TAG, "Failed to initialize client: config is missing Executor or executorCreateFn");
+      m_isInitialized = false;
+      return;
+    }
+    m_clientConfiguration.executor = m_clientConfiguration.configFactories.executorCreateFn();
+  }
   AWS_CHECK_PTR(SERVICE_NAME, m_endpointProvider);
   m_endpointProvider->InitBuiltInParameters(config);
 }
